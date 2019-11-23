@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "button_driver.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -53,7 +54,7 @@ UART_HandleTypeDef huart2;
 
 osThreadId_t defaultTaskHandle;
 /* USER CODE BEGIN PV */
-
+osThreadId_t buttonTaskHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -141,7 +142,13 @@ int main(void)
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+  InitButtonTask();
+  const osThreadAttr_t buttonTask_attributes = {
+    .name = "buttonTask",
+    .priority = (osPriority_t) osPriorityNormal,
+    .stack_size = 4096
+  };
+  buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */

@@ -25,6 +25,8 @@
 #include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "button_driver.h"
+#include "cmsis_os2.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,7 +63,7 @@
 extern TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN EV */
-
+extern osEventFlagsId_t evt_id;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -170,7 +172,7 @@ void EXTI0_IRQHandler(void)
   /* USER CODE END EXTI0_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
   /* USER CODE BEGIN EXTI0_IRQn 1 */
-
+    osEventFlagsSet(evt_id, FLAGS_MSK1);
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
