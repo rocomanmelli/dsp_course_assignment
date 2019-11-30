@@ -22,6 +22,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "button_driver.h"
+#include "read_accel.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -52,9 +53,10 @@ SPI_HandleTypeDef hspi1;
 
 UART_HandleTypeDef huart2;
 
-osThreadId_t defaultTaskHandle;
+
 /* USER CODE BEGIN PV */
 osThreadId_t buttonTaskHandle;
+osThreadId_t readAccelTaskHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -65,7 +67,6 @@ static void MX_I2S2_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
-void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -133,22 +134,24 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .priority = (osPriority_t) osPriorityNormal,
-    .stack_size = 4096
-  };
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   InitButtonTask();
   const osThreadAttr_t buttonTask_attributes = {
     .name = "buttonTask",
-    .priority = (osPriority_t) osPriorityNormal,
+    .priority = (osPriority_t) osPriorityAboveNormal,
     .stack_size = 4096
   };
   buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
+
+  InitReadAccelTask();
+  const osThreadAttr_t readAccelTask_attributes = {
+    .name = "readAccelTask",
+    .priority = (osPriority_t) osPriorityNormal,
+    .stack_size = 4096
+  };
+  readAccelTaskHandle = osThreadNew(ReadAccelTask, NULL,
+    &readAccelTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -503,23 +506,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */ 
-}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
