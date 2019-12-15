@@ -1,4 +1,11 @@
-Para arrancar el motor:
-PB7 en modo colector abierto y 0 para que arranque.
+Cosas que faltan:
+-Arrancar el motor (y según el resultado del ensayo, detenerlo): PB7 en modo colector abierto y 0 para que arranque.
+-Lógica de control (agregar callback cuando se reciba pulsación del botón azul de la placa para intentar iniciar el movimiento del motor y chequear si está o no descentrado).
+-Ajustar valor de threshold en componente del espectro de frecuencia (tener en cuenta que yo voy a estar usando una escala distinta que la que usó Marcelo cuando nos pasó los datos que adquirió él).
 
-La clave está en ver la frecuencia 19. Encontré esta asociación a partir del ejemplo que dan los de ARM en CMSIS/DSP que tienen una frecuencia en 10 KHz y muestrean a 48 KHz (creo) y por lo tanto grafican hasta los 24 KHz. De los 1024 puntos, se quedan con la mitad y luego la mayor amplitud cae en 512 * 10000 / 24000. En nuestro caso, muestreábamos a 1344 y el máximo que nos interesaba caía en 512 * 25 / 672 = 19. Por lo tanto esa es la frecuencia cuya amplitud hay que analizar. Sólo me resta encontrar el por qué.
+La clave está en ver la frecuencia 19. Encontré esta asociación a partir del ejemplo que dan los de ARM en CMSIS/DSP que tienen una frecuencia en 10 KHz y muestrean a 48 KHz (creo) y por lo tanto grafican hasta los 24 KHz. De los 1024 puntos, se quedan con la mitad y luego la mayor amplitud cae en 512 * 10000 / 24000. En nuestro caso, muestreábamos a 1344 y el máximo que nos interesaba caía en 512 * 25 / 672 = 19. Por lo tanto esa es la frecuencia cuya amplitud hay que analizar. Sólo me resta encontrar el por qué. Como comentario, entre los archivos que nos pasó Marcelo, viendo lo que ocurre en el eje Z, en el caso desbalanceado encontré una amplitud de 75 aproximadamente (en la posición 19 del vector de salida de la función de filtro) y en el caso balanceado encontré una amplitud de 20 o por ahí.
+
+Cosas por mejorar:
+-Usar función de CMSIS DSP que sirve específicamente para señales reales.
+-Mejorar el módulo de detección de botón pulsado haciendo uso de notificaciones en lugar de eventos o colas.
+-Detectar no sólo el desbalance con el cual estamos haciendo las pruebas sino uno más general. Un approach mucho más robusto aunque así también más costoso computacionalmente sería el de tener disponible el resultado de una FFT de la medición del acelerómetro cuando éste funciona normalmente y luego comparar el espectro encontrado con el de los datos recolectados. De este modo podríamos detectar más anomalías (de distintos tipos).
