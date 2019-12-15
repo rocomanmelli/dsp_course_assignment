@@ -1,0 +1,4 @@
+Para arrancar el motor:
+PB7 en modo colector abierto y 0 para que arranque.
+
+La clave está en ver la frecuencia 19. Encontré esta asociación a partir del ejemplo que dan los de ARM en CMSIS/DSP que tienen una frecuencia en 10 KHz y muestrean a 48 KHz (creo) y por lo tanto grafican hasta los 24 KHz. De los 1024 puntos, se quedan con la mitad y luego la mayor amplitud cae en 512 * 10000 / 24000. En nuestro caso, muestreábamos a 1344 y el máximo que nos interesaba caía en 512 * 25 / 672 = 19. Por lo tanto esa es la frecuencia cuya amplitud hay que analizar. Sólo me resta encontrar el por qué.
