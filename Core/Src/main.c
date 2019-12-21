@@ -140,7 +140,7 @@ int main(void)
   const osThreadAttr_t buttonTask_attributes = {
     .name = "buttonTask",
     .priority = (osPriority_t) osPriorityAboveNormal,
-    .stack_size = 4096
+    .stack_size = 512
   };
   buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
 
