@@ -52,7 +52,9 @@ void ButtonTask(void *argument)
                 if ((all_flags & FLAGS_MSK1) &&
                     HAL_GPIO_ReadPin(pulsador_1_GPIO_Port, pulsador_1_Pin))
                 {
-                    /* Do something */
+                    /*Configure GPIO pin Output Level */
+                    HAL_GPIO_WritePin(motor_GPIO_Port, motor_Pin,
+                        GPIO_PIN_RESET);
                     HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
                 }
                 if ((all_flags & FLAGS_MSK2) &&
