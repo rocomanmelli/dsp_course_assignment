@@ -41,6 +41,8 @@ void ReadAccelTask(void *argument)
     uint16_t index;
     for(;;)
     {
+        osDelay(100);
+        #if 0
         #ifndef SIMULATE_PROCESSING
         /* Data acquisition. */
         index = 0;
@@ -70,6 +72,6 @@ void ReadAccelTask(void *argument)
             HAL_UART_STATE_TIMEOUT);
         
         /* Process data. */
-        
+        #endif
     }
 }
