@@ -140,7 +140,7 @@ int main(void)
   const osThreadAttr_t buttonTask_attributes = {
     .name = "buttonTask",
     .priority = (osPriority_t) osPriorityAboveNormal,
-    .stack_size = 4096
+    .stack_size = 4096,
   };
   buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
 
@@ -148,7 +148,7 @@ int main(void)
   const osThreadAttr_t readAccelTask_attributes = {
     .name = "readAccelTask",
     .priority = (osPriority_t) osPriorityNormal,
-    .stack_size = 4096
+    .stack_size = 8192,
   };
   readAccelTaskHandle = osThreadNew(ReadAccelTask, NULL,
     &readAccelTask_attributes);
