@@ -7,15 +7,25 @@
 #include "arm_math.h"
 #include "arm_const_structs.h"
 
-#define SIMULATE_PROCESSING
-#define BUFFER_LENGTH 2688 /* 2 seconds of samples at highest ACC ODR. */
+
+/*
+ * Less than 1 s of samples at highest accelerometer ODR. It corresponds to
+ * 1024 samples actually but buffer has 2048 because it has real and imaginary
+ * part.
+ */
+#define BUFFER_LENGTH 2048
+
 
 static ACCELERO_DrvTypeDef *AccelerometerDrv;
 extern UART_HandleTypeDef huart2;
 #ifdef SIMULATE_PROCESSING
 extern float32_t input_data[BUFFER_LENGTH];
+float32_t *data_z = input_data;
+#else
+float32_t data_z[BUFFER_LENGTH];
 #endif
-//extern float32_t testInput_f32_10khz[2048];
+float32_t data_z_output[BUFFER_LENGTH / 2];
+
 
 void InitReadAccelTask()
 {
@@ -31,14 +41,9 @@ void InitReadAccelTask()
 void ReadAccelTask(void *argument)
 {
     int16_t pDataXYZ[3];
-#ifdef SIMULATE_PROCESSING
-    float32_t *data_z = input_data;
-#else
-    float32_t data_z[BUFFER_LENGTH];
-#endif
-    float32_t data_z_output[1024];
     uint8_t new_data;
     uint16_t index;
+
     for(;;)
     {
         #ifndef SIMULATE_PROCESSING
